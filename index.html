@@ -627,7 +627,7 @@
     function sendToGoogleSheets(nama, kelas, skor, total, peratus) {
       const statusDiv = document.getElementById("save-status");
 
-      if (!GOOGLE_SHEET_URL || GOOGLE_SHEET_URL.includes("GANTIKAN_DENGAN")) {
+      if (!GOOGLE_SHEET_URL || GOOGLE_SHEET_URL.includes("https://script.google.com/macros/s/AKfycbyt17GI65boMcmQbq7RRr4_bmr_QRlLP8Yk50k4vkE/dev")) {
         statusDiv.innerText = "Nota: Rekod tidak dihubungkan ke Google Sheets (URL belum ditetapkan).";
         return;
       }
