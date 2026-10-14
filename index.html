@@ -801,7 +801,14 @@
                 reviewContainer.appendChild(item);
             });
         }
-// Hantar data ke Google Sheets
+
+        // Restart Quiz Action
+        function restartQuiz() {
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }
+        
+        // Hantar data ke Google Sheets
       sendToGoogleSheets(studentName, studentClass, score, total, percentage);
     }
 
@@ -851,11 +858,6 @@
       link.click();
       document.body.removeChild(link);
     }
-        // Restart Quiz Action
-        function restartQuiz() {
-            document.getElementById('resultScreen').classList.add('hidden');
-            document.getElementById('startScreen').classList.remove('hidden');
-        }
     </script>
 </body>
 </html>
