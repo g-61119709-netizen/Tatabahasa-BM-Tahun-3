@@ -1,297 +1,5 @@
-<!DOCTYPE html>
-<html lang="ms">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuiz Perumpamaan Bahasa Melayu Interaktif</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Fredoka & Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Canvas Confetti CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        fredoka: ['Fredoka', 'sans-serif'],
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#fffbe1',
-                            100: '#fff3b8',
-                            400: '#fbbf24',
-                            500: '#f59e0b',
-                            600: '#d97706',
-                            700: '#b45309',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 50%, #fce7f3 100%);
-            min-height: 100vh;
-        }
-
-        .font-playful {
-            font-family: 'Fredoka', cursive, sans-serif;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.94);
-            backdrop-filter: blur(12px);
-            border: 2px solid rgba(255, 255, 255, 0.85);
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08);
-        }
-
-        .btn-bounce:active {
-            transform: scale(0.96);
-        }
-
-        .fade-in {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media print {
-            .no-print { display: none !important; }
-            .print-only { display: block !important; }
-            body { background: white !important; }
-            .glass-card { box-shadow: none !important; border: 1px solid #ccc !important; }
-        }
-    </style>
-</head>
-<body class="flex flex-col min-h-screen text-slate-800 antialiased selection:bg-amber-300">
-
-    <!-- Navigation Header -->
-    <header class="w-full bg-white/80 backdrop-blur-md border-b border-amber-200/60 sticky top-0 z-50 no-print">
-        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-400 to-orange-500 flex items-center justify-center text-white shadow-md shadow-amber-200">
-                    <i class="fa-solid fa-graduation-cap text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="font-playful font-bold text-lg md:text-xl text-slate-800 tracking-wide leading-none">
-                        Kuiz Perumpamaan <span class="text-amber-600">BM</span>
-                    </h1>
-                    <p class="text-xs text-slate-500 font-medium">Bahasa Melayu Sekolah Rendah</p>
-                </div>
-            </div>
-
-            <!-- Audio Control Button -->
-            <button id="soundToggleBtn" onclick="toggleSound()" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 text-sm font-semibold flex items-center gap-2 transition-all btn-bounce" title="Audio">
-                <i id="soundIcon" class="fa-solid fa-volume-high"></i>
-                <span id="soundText" class="hidden sm:inline">Bunyi: On</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- Main Content Container -->
-    <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
-        <div class="w-full max-w-2xl">
-
-            <!-- SCREEN 1: REGISTRATION / WELCOME -->
-            <div id="startScreen" class="glass-card rounded-3xl p-6 sm:p-10 fade-in text-center relative overflow-hidden">
-                <div class="absolute -top-10 -right-10 w-32 h-32 bg-amber-200/40 rounded-full blur-2xl"></div>
-                <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-sky-200/40 rounded-full blur-2xl"></div>
-
-                <div class="inline-flex items-center justify-center w-20 h-20 bg-amber-100 text-amber-600 rounded-3xl mb-4 text-4xl shadow-inner">
-                    <i class="fa-solid fa-book-open-reader"></i>
-                </div>
-
-                <h2 class="font-playful text-2xl sm:text-3xl font-bold text-slate-800 mb-2">
-                    Selamat Datang ke Kuiz Perumpamaan!
-                </h2>
-                <p class="text-slate-600 text-sm sm:text-base mb-8 max-w-md mx-auto">
-                    Isi maklumat anda di bawah untuk memulakan kuiz perumpamaan bergambar Bahasa Melayu.
-                </p>
-
-                <!-- Student Info Form -->
-                <div class="space-y-4 text-left max-w-md mx-auto mb-8">
-                    <div>
-                        <label for="studentName" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                            <i class="fa-solid fa-user text-amber-500 mr-1"></i> Nama Murid:
-                        </label>
-                        <input type="text" id="studentName" placeholder="Contoh: Muhammad Ali" class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 outline-none transition-all text-slate-800 font-medium">
-                        <p id="nameError" class="hidden text-xs text-rose-500 font-semibold mt-1">
-                            <i class="fa-solid fa-circle-exclamation mr-1"></i>Sila isi nama anda terlebih dahulu.
-                        </p>
-                    </div>
-
-                    <div>
-                        <label for="studentClass" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                            <i class="fa-solid fa-school text-amber-500 mr-1"></i> Kelas:
-                        </label>
-                        <input type="text" id="studentClass" placeholder="Contoh: 3 Cemerlang" class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-amber-400 focus:ring-4 focus:ring-amber-100 outline-none transition-all text-slate-800 font-medium">
-                        <p id="classError" class="hidden text-xs text-rose-500 font-semibold mt-1">
-                            <i class="fa-solid fa-circle-exclamation mr-1"></i>Sila isi kelas anda.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Start Button -->
-                <button onclick="startQuiz()" class="w-full max-w-md py-4 px-8 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white font-playful text-xl font-bold tracking-wide shadow-lg shadow-amber-300/50 transition-all transform hover:-translate-y-0.5 active:translate-y-0 btn-bounce flex items-center justify-center gap-3">
-                    <span>Mula Menjawab</span>
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
-            </div>
-
-            <!-- SCREEN 2: QUIZ QUESTION SCREEN -->
-            <div id="quizScreen" class="hidden glass-card rounded-3xl p-5 sm:p-8 fade-in">
-                <!-- Quiz Progress Header -->
-                <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-200/80">
-                    <div>
-                        <span class="text-xs text-slate-500 font-semibold block uppercase tracking-wider">Murid</span>
-                        <span id="displayStudentInfo" class="text-sm font-bold text-slate-800"></span>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-xs text-slate-500 font-semibold block uppercase tracking-wider">Soalan</span>
-                        <span id="questionCounter" class="font-playful text-lg font-bold text-amber-600">1 / 10</span>
-                    </div>
-                </div>
-
-                <!-- Progress Bar -->
-                <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden mb-5 p-0.5 border border-slate-200/60">
-                    <div id="progressBar" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-full transition-all duration-500" style="width: 10%;"></div>
-                </div>
-
-                <!-- Gambar Soalan (Question Image Display Box) -->
-                <div id="imageContainer" class="mb-5 overflow-hidden rounded-2xl border-2 border-slate-200 bg-amber-50/50 shadow-sm flex items-center justify-center">
-                    <img id="questionImage" src="" alt="Gambar Soalan Perumpamaan" class="w-full h-48 sm:h-64 object-cover transition-all hover:scale-105 duration-300" onerror="this.onerror=null; this.src='https://placehold.co/600x300/fef3c7/d97706?text=Gambar+Soalan';">
-                </div>
-
-                <!-- Situation / Question Text Card -->
-                <div class="bg-amber-50/90 border-2 border-amber-200/80 rounded-2xl p-4 sm:p-5 mb-5 relative">
-                    <div class="absolute -top-3 left-4 bg-amber-500 text-white text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-md shadow-sm">
-                        Situasi / Gambaran
-                    </div>
-                    <p id="situationText" class="text-slate-800 font-medium text-base sm:text-lg leading-relaxed pt-1">
-                        <!-- Situation text injected dynamically -->
-                    </p>
-                </div>
-
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
-                    Pilih Perumpamaan Yang Paling Tepat:
-                </p>
-
-                <!-- Options List (Dynamically Shuffled A, B, C, D) -->
-                <div id="optionsContainer" class="space-y-3 mb-6">
-                    <!-- Option buttons will be dynamically rendered -->
-                </div>
-
-                <!-- Explanation Box (Initially Hidden) -->
-                <div id="explanationContainer" class="hidden rounded-2xl p-5 mb-6 fade-in border-2 transition-all">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div id="explanationIcon" class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm"></div>
-                        <h4 id="explanationTitle" class="font-playful font-bold text-lg"></h4>
-                    </div>
-                    <p id="explanationText" class="text-slate-700 text-sm sm:text-base leading-relaxed pl-11">
-                        <!-- Explanation text injected dynamically -->
-                    </p>
-                </div>
-
-                <!-- Next Question Button -->
-                <div class="flex justify-end">
-                    <button id="nextBtn" onclick="nextQuestion()" class="hidden py-3 px-6 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-sm sm:text-base tracking-wide transition-all btn-bounce flex items-center gap-2 shadow-md">
-                        <span id="nextBtnText">Soalan Seterusnya</span>
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- SCREEN 3: RESULTS / SCORE SCREEN -->
-            <div id="resultScreen" class="hidden glass-card rounded-3xl p-6 sm:p-10 fade-in text-center relative overflow-hidden">
-                <div class="relative inline-block mb-4">
-                    <div class="w-24 h-24 rounded-full bg-amber-100 flex items-center justify-center mx-auto text-amber-500 text-5xl shadow-inner border-4 border-amber-300">
-                        <i id="resultIcon" class="fa-solid fa-trophy"></i>
-                    </div>
-                    <span id="starBadge" class="absolute -bottom-2 -right-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
-                        100%
-                    </span>
-                </div>
-
-                <h2 id="resultHeading" class="font-playful text-2xl sm:text-3xl font-bold text-slate-800 mb-1">
-                    Tahniah & Syabas!
-                </h2>
-                <p id="resultSubheading" class="text-slate-600 text-sm mb-6">
-                    Berikut adalah keputusan kuiz perumpamaan anda:
-                </p>
-
-                <!-- Result Card Details -->
-                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-6 mb-6 max-w-md mx-auto text-left shadow-sm">
-                    <div class="grid grid-cols-2 gap-4 pb-4 border-b border-slate-200 mb-4">
-                        <div>
-                            <span class="text-xs text-slate-500 uppercase font-semibold block">Nama Murid</span>
-                            <span id="resName" class="font-bold text-slate-800 text-sm"></span>
-                        </div>
-                        <div>
-                            <span class="text-xs text-slate-500 uppercase font-semibold block">Kelas</span>
-                            <span id="resClass" class="font-bold text-slate-800 text-sm"></span>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <span class="text-xs text-slate-500 uppercase font-semibold block">Skor Keseluruhan</span>
-                            <span id="resScoreText" class="font-playful text-2xl font-bold text-amber-600">0 / 10</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-xs text-slate-500 uppercase font-semibold block">Keputusan</span>
-                            <span id="resGradeBadge" class="inline-block mt-1 px-3 py-1 rounded-lg text-xs font-bold"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Review Section Header -->
-                <div class="text-left mb-4">
-                    <h3 class="font-playful font-bold text-slate-800 text-lg flex items-center gap-2">
-                        <i class="fa-solid fa-clipboard-check text-amber-500"></i>
-                        Ulasan Jawapan Soalan
-                    </h3>
-                </div>
-
-                <!-- Question Review List -->
-                <div id="reviewContainer" class="space-y-3 text-left max-h-80 overflow-y-auto pr-1 mb-8">
-                    <!-- Review items injected dynamically -->
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row gap-3 justify-center no-print">
-                    <button onclick="restartQuiz()" class="py-3.5 px-6 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white font-bold text-base shadow-md transition-all btn-bounce flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-rotate-left"></i>
-                        <span>Jawab Semula</span>
-                    </button>
-                    <button onclick="window.print()" class="py-3.5 px-6 rounded-2xl bg-white border-2 border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-base transition-all btn-bounce flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-print"></i>
-                        <span>Cetak Keputusan</span>
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="w-full py-4 text-center text-slate-400 text-xs no-print border-t border-slate-200/50 bg-white/40">
-        Kuiz Perumpamaan Bahasa Melayu &bull; Dibina untuk PTM & GitHub Pages
-    </footer>
-
-    <script>
-        // Web Audio API Synthesizer Engine (Built-in sounds, no audio files needed)
+<script>
+        // Web Audio API Synthesizer Engine (Built-in sounds)
         const AudioEngine = {
             ctx: null,
             muted: false,
@@ -380,153 +88,101 @@
             }
         }
 
-        /* ==================================================================================
-           === EDIT PAUTAN GAMBAR DI SINI ===
-           Tukarkan URL 'https://placehold.co/...' kepada nama fail gambar anda di GitHub!
-           Contoh: "images/soalan1.png" atau URL penuh "https://i.imgur.com/example.jpg"
-           ================================================================================== */
+        // =========================================================
+        // 1. ISIKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
+        // =========================================================
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzHyJSXd2Xir8nW_EYCm15wSIb_2qHOPrps978p1JyWcEb7PvYxs39AHrav_k6xKFuL/exec";
+
+        // Senarai Soalan
         const quizQuestions = [
             {
                 id: 1,
-                // === EDIT PAUTAN GAMBAR SOALAN 1 DI SINI ===
                 image: "images/Soalan 1.jpg",
                 situation: "Amir dan adiknya sering bertengkar dan tidak pernah duduk secara aman setiap kali berjumpa di rumah. Keadaan mereka disamakan seperti:",
                 correctAnswer: "Seperti anjing dengan kucing",
-                distractors: [
-                    "Seperti isi dengan kuku",
-                    "Bagai aur dengan tebing",
-                    "Seperti cacing kepanasan"
-                ],
+                distractors: ["Seperti isi dengan kuku", "Bagai aur dengan tebing", "Seperti cacing kepanasan"],
                 explanation: "Perumpamaan 'Seperti anjing dengan kucing' bermaksud dua orang yang asyik bertengkar dan tidak pernah berbaik apabila berjumpa."
             },
             {
                 id: 2,
-                // === EDIT PAUTAN GAMBAR SOALAN 2 DI SINI ===
                 image: "images/Soalan 2.jpg",
                 situation: "Siva tidak pernah membaca buku atau berjalan keluar dari kampungnya, menyebabkan dia tidak tahu langsung tentang perkembangan dunia luar. Keadaan Siva ini umpama:",
                 correctAnswer: "Seperti katak di bawah tempurung",
-                distractors: [
-                    "Seperti burung dalam sangkar",
-                    "Seperti tikus membaiki labu",
-                    "Bagai aur dengan tebing"
-                ],
+                distractors: ["Seperti burung dalam sangkar", "Seperti tikus membaiki labu", "Bagai aur dengan tebing"],
                 explanation: "Perumpamaan 'Seperti katak di bawah tempurung' bermaksud orang yang amat cetek ilmu pengetahuannya tentang dunia luar."
             },
             {
                 id: 3,
-                // === EDIT PAUTAN GAMBAR SOALAN 3 DI SINI ===
                 image: "images/Soalan 3.jpg",
                 situation: "Aina dan Mei Ling merupakan sahabat karib yang sangat rapat dan sukar dipisahkan sejak dari tadika lagi. Hubungan mereka amat erat seperti:",
                 correctAnswer: "Seperti isi dengan kuku",
-                distractors: [
-                    "Seperti mencurah air ke daun keladi",
-                    "Seperti anjing dengan kucing",
-                    "Seperti cacing kepanasan"
-                ],
+                distractors: ["Seperti mencurah air ke daun keladi", "Seperti anjing dengan kucing", "Seperti cacing kepanasan"],
                 explanation: "Perumpamaan 'Seperti isi dengan kuku' bermaksud hubungan persahabatan atau persaudaraan yang amat erat dan sukar dipisahkan."
             },
             {
                 id: 4,
-                // === EDIT PAUTAN GAMBAR SOALAN 4 DI SINI ===
                 image: "images/Soalan 4.jpg",
                 situation: "Haikal kelihatan amat gelisah dan tidak boleh duduk diam di kerusinya kerana sedang menunggu keputusan ujian. Keadaan Haikal ini disamakan:",
                 correctAnswer: "Seperti cacing kepanasan",
-                distractors: [
-                    "Bagai aur dengan tebing",
-                    "Seperti ayam betina bertelur",
-                    "Seperti katak di bawah tempurung"
-                ],
+                distractors: ["Bagai aur dengan tebing", "Seperti ayam betina bertelur", "Seperti katak di bawah tempurung"],
                 explanation: "Perumpamaan 'Seperti cacing kepanasan' bermaksud keadaan seseorang yang amat gelisah, resah, dan tidak boleh tenang."
             },
             {
                 id: 5,
-                // === EDIT PAUTAN GAMBAR SOALAN 5 DI SINI ===
                 image: "images/Soalan 5.jpg",
                 situation: "Setelah menjadi kaya di bandar, Daniel tidak mahu lagi mengaku ibunya yang miskin di kampung. Sikap Daniel yang tidak mengenang jasa ini dikaitkan dengan perumpamaan:",
                 correctAnswer: "Seperti kacang lupakan kulit",
-                distractors: [
-                    "Seperti isi dengan kuku",
-                    "Seperti tikus membaiki labu",
-                    "Seperti burung dalam sangkar"
-                ],
+                distractors: ["Seperti isi dengan kuku", "Seperti tikus membaiki labu", "Seperti burung dalam sangkar"],
                 explanation: "Perumpamaan 'Seperti kacang lupakan kulit' bermaksud orang yang lupa akan asal usulnya atau tidak mengenang jasa orang lain."
             },
             {
                 id: 6,
-                // === EDIT PAUTAN GAMBAR SOALAN 6 DI SINI ===
                 image: "images/Soalan 6.jpg",
                 situation: "Cikgu Hafiz sudah berkali-kali menasihati Daniel supaya rajin belajar, tetapi Daniel tetap malas dan tidak menghiraukannya. Perbuatan memberi nasihat kepada Daniel adalah:",
                 correctAnswer: "Seperti mencurah air ke daun keladi",
-                distractors: [
-                    "Bagai aur dengan tebing",
-                    "Seperti anjing dengan kucing",
-                    "Seperti cacing kepanasan"
-                ],
+                distractors: ["Bagai aur dengan tebing", "Seperti anjing dengan kucing", "Seperti cacing kepanasan"],
                 explanation: "Perumpamaan 'Seperti mencurah air ke daun keladi' bermaksud memberi nasihat atau ajaran yang sia-sia kerana tidak dihiraukan."
             },
             {
                 id: 7,
-                // === EDIT PAUTAN GAMBAR SOALAN 7 DI SINI ===
                 image: "images/Soalan 7.jpg",
                 situation: "Siti berasa sangat sedih kerana tidak dibenarkan keluar bermain dengan kawan-kawannya dan terkurung di dalam rumah sepanjang hari. Kehidupan Siti disamakan:",
                 correctAnswer: "Seperti burung dalam sangkar",
-                distractors: [
-                    "Seperti ayam betina bertelur",
-                    "Seperti kacang lupakan kulit",
-                    "Seperti isi dengan kuku"
-                ],
+                distractors: ["Seperti ayam betina bertelur", "Seperti kacang lupakan kulit", "Seperti isi dengan kuku"],
                 explanation: "Perumpamaan 'Seperti burung dalam sangkar' bermaksud seseorang yang berasa kehidupannya terkurung dan tidak bebas."
             },
             {
                 id: 8,
-                // === EDIT PAUTAN GAMBAR SOALAN 8 DI SINI ===
                 image: "images/Soalan 8.jpg",
                 situation: "Penduduk Kampung Seri Murni sentiasa bersatu padu dan tolong-menolong membersihkan kawasan balai raya bersama-sama. Sikap mereka ini bagai:",
                 correctAnswer: "Bagai aur dengan tebing",
-                distractors: [
-                    "Seperti katak di bawah tempurung",
-                    "Seperti mencurah air ke daun keladi",
-                    "Seperti tikus membaiki labu"
-                ],
+                distractors: ["Seperti katak di bawah tempurung", "Seperti mencurah air ke daun keladi", "Seperti tikus membaiki labu"],
                 explanation: "Perumpamaan 'Bagai aur dengan tebing' bermaksud sikap saling membantu, bekerjasama, dan bersatu padu dalam masyarakat."
             },
             {
                 id: 9,
-                // === EDIT PAUTAN GAMBAR SOALAN 9 DI SINI ===
                 image: "images/Soalan 9.jpg",
                 situation: "Aiman cuba membaiki jam tangan adiknya yang rosak, tetapi akhirnya jam itu menjadi semakin hancur dan tidak boleh digunakan langsung. Perbuatan Aiman seperti:",
                 correctAnswer: "Seperti tikus membaiki labu",
-                distractors: [
-                    "Seperti anjing dengan kucing",
-                    "Seperti cacing kepanasan",
-                    "Seperti burung dalam sangkar"
-                ],
+                distractors: ["Seperti anjing dengan kucing", "Seperti cacing kepanasan", "Seperti burung dalam sangkar"],
                 explanation: "Perumpamaan 'Seperti tikus membaiki labu' bermaksud cuba membaiki sesuatu tetapi sebaliknya menyebabkan ia semakin rosak."
             },
             {
                 id: 10,
-                // === EDIT PAUTAN GAMBAR SOALAN 10 DI SINI ===
                 image: "images/Soalan 10.jpg",
                 situation: "Mak Senah riuh memberitahu semua jiran di kampung tentang hadiah kecil yang dimenanginya dalam cabutan bertuah. Sikap Mak Senah disamakan:",
                 correctAnswer: "Seperti ayam betina bertelur",
-                distractors: [
-                    "Seperti isi dengan kuku",
-                    "Bagai aur dengan tebing",
-                    "Seperti kacang lupakan kulit"
-                ],
+                distractors: ["Seperti isi dengan kuku", "Bagai aur dengan tebing", "Seperti kacang lupakan kulit"],
                 explanation: "Perumpamaan 'Seperti ayam betina bertelur' bermaksud riuh-riuh memberitahu orang ramai tentang sesuatu kejayaan atau perolehan yang sedikit."
             }
         ];
 
-        // State variables
         let currentQuestionIndex = 0;
         let score = 0;
         let studentName = '';
         let studentClass = '';
         let userAnswers = [];
-        let currentShuffledOptions = [];
 
-        // Fisher-Yates Shuffle Algorithm (Ensures randomized options A, B, C, D)
         function shuffleArray(array) {
             const arr = [...array];
             for (let i = arr.length - 1; i > 0; i--) {
@@ -536,7 +192,6 @@
             return arr;
         }
 
-        // Start Quiz Action
         function startQuiz() {
             const nameInput = document.getElementById('studentName');
             const classInput = document.getElementById('studentClass');
@@ -579,16 +234,13 @@
             loadQuestion();
         }
 
-        // Load current question & image
         function loadQuestion() {
             const qData = quizQuestions[currentQuestionIndex];
 
-            // Update question counter & progress bar
             document.getElementById('questionCounter').innerText = `${currentQuestionIndex + 1} / ${quizQuestions.length}`;
             const progressPercent = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
             document.getElementById('progressBar').style.width = `${progressPercent}%`;
 
-            // Papar Gambar Soalan
             const imgElement = document.getElementById('questionImage');
             const imageContainer = document.getElementById('imageContainer');
             if (qData.image && qData.image.trim() !== '') {
@@ -598,211 +250,130 @@
                 imageContainer.classList.add('hidden');
             }
 
-            // Set situation text
             document.getElementById('situationText').innerText = qData.situation;
-
-            // Reset UI states
             document.getElementById('explanationContainer').classList.add('hidden');
             document.getElementById('nextBtn').classList.add('hidden');
 
-            // Shuffle options for this question
             const rawChoices = [qData.correctAnswer, ...qData.distractors];
-            currentShuffledOptions = shuffleArray(rawChoices);
+            const currentShuffledOptions = shuffleArray(rawChoices);
 
-            // Render option buttons
             const optionsContainer = document.getElementById('optionsContainer');
             optionsContainer.innerHTML = '';
-            const optionLabels = ['A', 'B', 'C', 'D'];
 
-            currentShuffledOptions.forEach((optionText, index) => {
-                const label = optionLabels[index];
-
+            const labels = ['A', 'B', 'C', 'D'];
+            currentShuffledOptions.forEach((opt, idx) => {
                 const btn = document.createElement('button');
-                btn.className = `option-btn w-full p-4 rounded-2xl border-2 border-slate-200 hover:border-amber-400 hover:bg-amber-50/50 bg-white text-left font-semibold text-slate-700 transition-all flex items-center gap-3 shadow-sm btn-bounce`;
-                btn.onclick = () => selectOption(index, optionText);
-
-                btn.innerHTML = `
-                    <span class="w-8 h-8 rounded-xl bg-slate-100 border border-slate-300 flex items-center justify-center font-playful text-slate-700 font-bold shrink-0 label-badge">
-                        ${label}
-                    </span>
-                    <span class="text-sm sm:text-base flex-grow">${optionText}</span>
-                    <i class="fa-solid fa-circle-check text-emerald-500 text-xl hidden check-icon"></i>
-                    <i class="fa-solid fa-circle-xmark text-rose-500 text-xl hidden x-icon"></i>
-                `;
-
+                btn.className = "w-full text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:bg-amber-50 hover:border-amber-300 transition-all font-medium flex items-center gap-3 btn-bounce shadow-sm";
+                btn.innerHTML = `<span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center font-bold text-slate-600 text-sm">${labels[idx]}</span> <span>${opt}</span>`;
+                btn.onclick = () => checkAnswer(opt, btn);
                 optionsContainer.appendChild(btn);
             });
         }
 
-        // Option selection handler
-        function selectOption(selectedIndex, selectedText) {
+        function checkAnswer(selectedOpt, btn) {
             const qData = quizQuestions[currentQuestionIndex];
-            const isCorrect = (selectedText === qData.correctAnswer);
+            const isCorrect = selectedOpt === qData.correctAnswer;
 
-            // Play audio feedback
-            if (isCorrect) {
-                AudioEngine.playCorrect();
-                score++;
-            } else {
-                AudioEngine.playIncorrect();
-            }
+            const allBtns = document.querySelectorAll('#optionsContainer button');
+            allBtns.forEach(b => b.disabled = true);
 
-            // Record user answer
             userAnswers.push({
                 question: qData.situation,
-                userChoice: selectedText,
-                correctChoice: qData.correctAnswer,
-                isCorrect: isCorrect,
-                explanation: qData.explanation
+                selected: selectedOpt,
+                correct: qData.correctAnswer,
+                isCorrect: isCorrect
             });
 
-            // Highlight buttons & disable choices
-            const optionBtns = document.querySelectorAll('.option-btn');
-            optionBtns.forEach((btn, idx) => {
-                btn.disabled = true;
-                btn.classList.remove('hover:border-amber-400', 'hover:bg-amber-50/50', 'btn-bounce');
+            if (isCorrect) {
+                score++;
+                btn.classList.remove('border-slate-200', 'bg-white');
+                btn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+                AudioEngine.playCorrect();
+            } else {
+                btn.classList.remove('border-slate-200', 'bg-white');
+                btn.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-900');
+                AudioEngine.playIncorrect();
 
-                const optionText = currentShuffledOptions[idx];
-                const checkIcon = btn.querySelector('.check-icon');
-                const xIcon = btn.querySelector('.x-icon');
-                const badge = btn.querySelector('.label-badge');
+                allBtns.forEach(b => {
+                    if (b.innerText.includes(qData.correctAnswer)) {
+                        b.classList.remove('border-slate-200', 'bg-white');
+                        b.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+                    }
+                });
+            }
 
-                if (optionText === qData.correctAnswer) {
-                    btn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
-                    badge.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
-                    checkIcon.classList.remove('hidden');
-                } else if (idx === selectedIndex && !isCorrect) {
-                    btn.classList.add('border-rose-400', 'bg-rose-50', 'text-rose-900');
-                    badge.classList.add('bg-rose-500', 'text-white', 'border-rose-500');
-                    xIcon.classList.remove('hidden');
-                } else {
-                    btn.classList.add('opacity-50');
-                }
-            });
-
-            // Show explanation box
             const expContainer = document.getElementById('explanationContainer');
             const expIcon = document.getElementById('explanationIcon');
             const expTitle = document.getElementById('explanationTitle');
             const expText = document.getElementById('explanationText');
 
-            expContainer.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-200', 'bg-rose-50', 'border-rose-200');
-
+            expContainer.classList.remove('hidden', 'border-emerald-300', 'bg-emerald-50/80', 'border-rose-300', 'bg-rose-50/80');
             if (isCorrect) {
-                expContainer.classList.add('bg-emerald-50', 'border-emerald-200');
-                expIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm bg-emerald-500';
+                expContainer.classList.add('border-emerald-300', 'bg-emerald-50/80');
+                expIcon.className = "w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm bg-emerald-500";
                 expIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
-                expTitle.className = 'font-playful font-bold text-lg text-emerald-800';
-                expTitle.innerText = 'Syabas! Jawapan Tepat 🎉';
+                expTitle.innerText = "Jawapan Tepat!";
+                expTitle.className = "font-playful font-bold text-lg text-emerald-800";
             } else {
-                expContainer.classList.add('bg-rose-50', 'border-rose-200');
-                expIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm bg-rose-500';
+                expContainer.classList.add('border-rose-300', 'bg-rose-50/80');
+                expIcon.className = "w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm bg-rose-500";
                 expIcon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-                expTitle.className = 'font-playful font-bold text-lg text-rose-800';
-                expTitle.innerText = 'Alamak! Jawapan Kurang Tepat 💡';
+                expTitle.innerText = "Jawapan Kurang Tepat";
+                expTitle.className = "font-playful font-bold text-lg text-rose-800";
             }
-
             expText.innerText = qData.explanation;
 
-            // Show next button
-            const nextBtn = document.getElementById('nextBtn');
-            const nextBtnText = document.getElementById('nextBtnText');
-            nextBtn.classList.remove('hidden');
-
-            if (currentQuestionIndex === quizQuestions.length - 1) {
-                nextBtnText.innerText = 'Lihat Keputusan';
-            } else {
-                nextBtnText.innerText = 'Soalan Seterusnya';
-            }
+            document.getElementById('nextBtn').classList.remove('hidden');
         }
 
         function nextQuestion() {
-            if (currentQuestionIndex < quizQuestions.length - 1) {
-                currentQuestionIndex++;
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizQuestions.length) {
                 loadQuestion();
             } else {
                 showResults();
             }
         }
-        function simpanKeGoogleSheet(nama, kelas, skor, peratus) {
-          const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHyJSXd2Xir8nW_EYCm15wSIb_2qHOPrps978p1JyWcEb7PvYxs39AHrav_k6xKFuL/exec"; // <--- Tampal URL Web App di sini
 
-          fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              nama: nama,
-              kelas: kelas,
-              skor: skor + " / 10",
-              peratus: peratus + "%"
-            })
-          })
-          .then(() => {
-            console.log("Rekod berjaya dihantar ke Google Sheets!");
-          })
-          .catch(error => {
-            console.error("Ralat menghantar rekod:", error);
-          });
-        }
-        // Render Final Results Screen
         function showResults() {
             document.getElementById('quizScreen').classList.add('hidden');
             document.getElementById('resultScreen').classList.remove('hidden');
 
-            const total = quizQuestions.length;
-            const percentage = Math.round((score / total) * 100);
-
             document.getElementById('resName').innerText = studentName;
             document.getElementById('resClass').innerText = studentClass;
-            document.getElementById('resScoreText').innerText = `${score} / ${total} (${percentage}%)`;
+            document.getElementById('resScoreText').innerText = `${score} / ${quizQuestions.length}`;
 
-            const resIcon = document.getElementById('resultIcon');
-            const resHeading = document.getElementById('resultHeading');
-            const resSub = document.getElementById('resultSubheading');
-            const resGradeBadge = document.getElementById('resGradeBadge');
-            const starBadge = document.getElementById('starBadge');
+            const percent = Math.round((score / quizQuestions.length) * 100);
+            document.getElementById('starBadge').innerText = `${percent}%`;
 
-            starBadge.innerText = `${percentage}%`;
-
-            if (percentage >= 80) {
-                resIcon.className = 'fa-solid fa-trophy text-amber-500';
-                resHeading.innerText = 'Tahniah & Syabas! 🌟';
-                resSub.innerText = 'Pencapaian anda amat cemerlang dalam perumpamaan Bahasa Melayu!';
-                resGradeBadge.className = 'inline-block mt-1 px-3 py-1 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
-                resGradeBadge.innerText = 'Sangat Cemerlang';
+            if (percent >= 80) {
                 AudioEngine.playFanfare();
-
-                try {
-                    confetti({
-                        particleCount: 100,
-                        spread: 70,
-                        origin: { y: 0.6 }
-                    });
-                } catch (e) {
-                    console.log('Confetti effect executed');
-                }
-            } else if (percentage >= 50) {
-                resIcon.className = 'fa-solid fa-award text-sky-500';
-                resHeading.innerText = 'Bagus & Teruskan Usaha! 👍';
-                resSub.innerText = 'Penguasaan perumpamaan anda adalah baik. Boleh dipertingkatkan lagi!';
-                resGradeBadge.className = 'inline-block mt-1 px-3 py-1 rounded-lg text-xs font-bold bg-sky-100 text-sky-800 border border-sky-300';
-                resGradeBadge.innerText = 'Baik / Memuaskan';
-            } else {
-                resIcon.className = 'fa-solid fa-book-open text-rose-500';
-                resHeading.innerText = 'Jangan Putus Asa! 💪';
-                resSub.innerText = 'Sila baca ulasan soalan di bawah dan cuba jawab sekali lagi.';
-                resGradeBadge.className = 'inline-block mt-1 px-3 py-1 rounded-lg text-xs font-bold bg-rose-100 text-rose-800 border border-rose-300';
-                resGradeBadge.innerText = 'Perlu Latihan';
+                if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
             }
+
+            // Membina Paparan Ulasan Jawapan
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.innerHTML = '';
+            userAnswers.forEach((ans, idx) => {
+                const item = document.createElement('div');
+                item.className = `p-3 rounded-xl border text-sm ${ans.isCorrect ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}`;
+                item.innerHTML = `
+                    <div class="font-bold mb-1">${idx + 1}. ${ans.question}</div>
+                    <div class="${ans.isCorrect ? 'text-emerald-700' : 'text-rose-700'}">Jawapan Murid: ${ans.selected} ${ans.isCorrect ? '✓' : '✗'}</div>
+                    ${!ans.isCorrect ? `<div class="text-emerald-700 font-semibold">Jawapan Sebenar: ${ans.correct}</div>` : ''}
+                `;
+                reviewContainer.appendChild(item);
+            });
+
+            // === HANTAR REKOD KE GOOGLE SHEETS ===
+            simpanKeGoogleSheet(studentName, studentClass, score, quizQuestions.length, percent);
+        }
 
         // =========================================================
         // FUNGSI UTAMA MENYIMPAN DATA KE GOOGLE SHEETS
         // =========================================================
         function simpanKeGoogleSheet(nama, kelas, skor, total, peratus) {
-            if (!GOOGLE_SHEET_URL || GOOGLE_SHEET_URL.includes("https://script.google.com/macros/s/AKfycbzHyJSXd2Xir8nW_EYCm15wSIb_2qHOPrps978p1JyWcEb7PvYxs39AHrav_k6xKFuL/exec")) {
+            if (!GOOGLE_SHEET_URL || GOOGLE_SHEET_URL.includes("GANTIKAN_DENGAN")) {
                 console.warn("URL Google Sheets belum disetkan.");
                 return;
             }
@@ -828,11 +399,10 @@
             });
         }
 
-        // Restart Quiz Action
         function restartQuiz() {
             document.getElementById('resultScreen').classList.add('hidden');
             document.getElementById('startScreen').classList.remove('hidden');
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentClass').value = '';
         }
     </script>
-</body>
-</html>
