@@ -798,29 +798,33 @@
                 resGradeBadge.innerText = 'Perlu Latihan';
             }
 
-            // Render Question Review List
-            const reviewContainer = document.getElementById('reviewContainer');
-            reviewContainer.innerHTML = '';
+        // =========================================================
+        // FUNGSI UTAMA MENYIMPAN DATA KE GOOGLE SHEETS
+        // =========================================================
+        function simpanKeGoogleSheet(nama, kelas, skor, total, peratus) {
+            if (!GOOGLE_SHEET_URL || GOOGLE_SHEET_URL.includes(https://script.google.com/macros/s/AKfycbzHyJSXd2Xir8nW_EYCm15wSIb_2qHOPrps978p1JyWcEb7PvYxs39AHrav_k6xKFuL/exec)) {
+                console.warn("URL Google Sheets belum disetkan.");
+                return;
+            }
 
-            userAnswers.forEach((ans, idx) => {
-                const item = document.createElement('div');
-                item.className = `p-4 rounded-xl border text-sm ${ans.isCorrect ? 'bg-emerald-50/60 border-emerald-200' : 'bg-rose-50/60 border-rose-200'}`;
-
-                item.innerHTML = `
-                    <div class="flex items-start justify-between gap-2 mb-1">
-                        <span class="font-bold text-slate-800">
-                            Soalan ${idx + 1}: ${ans.isCorrect ? '<span class="text-emerald-600 font-semibold">[Betul]</span>' : '<span class="text-rose-600 font-semibold">[Salah]</span>'}
-                        </span>
-                    </div>
-                    <p class="text-slate-600 mb-2 italic">"${ans.question}"</p>
-                    <div class="space-y-1 text-xs">
-                        <p class="text-slate-700"><strong>Jawapan Anda:</strong> <span class="${ans.isCorrect ? 'text-emerald-700 font-bold' : 'text-rose-700 font-bold'}">${ans.userChoice}</span></p>
-                        ${!ans.isCorrect ? `<p class="text-slate-700"><strong>Jawapan Betul:</strong> <span class="text-emerald-700 font-bold">${ans.correctChoice}</span></p>` : ''}
-                        <p class="text-slate-600 mt-1 pt-1 border-t border-slate-200/60"><strong>Penerangan:</strong> ${ans.explanation}</p>
-                    </div>
-                `;
-
-                reviewContainer.appendChild(item);
+            fetch(GOOGLE_SHEET_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nama: nama,
+                    kelas: kelas,
+                    skor: `${skor} / ${total}`,
+                    peratus: `${peratus}%`
+                })
+            })
+            .then(() => {
+                console.log("Rekod murid berjaya dihantar ke Google Sheets!");
+            })
+            .catch(err => {
+                console.error("Ralat menyimpan rekod:", err);
             });
         }
 
