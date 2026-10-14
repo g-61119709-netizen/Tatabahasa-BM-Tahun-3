@@ -724,7 +724,29 @@
                 showResults();
             }
         }
+        function simpanKeGoogleSheet(nama, kelas, skor, peratus) {
+          const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHyJSXd2Xir8nW_EYCm15wSIb_2qHOPrps978p1JyWcEb7PvYxs39AHrav_k6xKFuL/exec"; // <--- Tampal URL Web App di sini
 
+          fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              nama: nama,
+              kelas: kelas,
+              skor: skor + " / 10",
+              peratus: peratus + "%"
+            })
+          })
+          .then(() => {
+            console.log("Rekod berjaya dihantar ke Google Sheets!");
+          })
+          .catch(error => {
+            console.error("Ralat menghantar rekod:", error);
+          });
+        }
         // Render Final Results Screen
         function showResults() {
             document.getElementById('quizScreen').classList.add('hidden');
