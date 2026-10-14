@@ -807,57 +807,6 @@
             document.getElementById('resultScreen').classList.add('hidden');
             document.getElementById('startScreen').classList.remove('hidden');
         }
-        
-        // Hantar data ke Google Sheets
-      sendToGoogleSheets(studentName, studentClass, score, total, percentage);
-    }
-
-    function sendToGoogleSheets(nama, kelas, skor, total, peratus) {
-      const statusDiv = document.getElementById("save-status");
-
-      if (!GOOGLE_SHEET_URL || GOOGLE_SHEET_URL.includes("https://script.google.com/macros/s/AKfycbwVDkm5szjhju9snp25txUmzJBRgJewtrS_yp5iXZDkPMGdDO534n2UEZNcqKB5rst-/exec")) {
-        statusDiv.innerText = "Nota: Rekod tidak dihubungkan ke Google Sheets (URL belum ditetapkan).";
-        return;
-      }
-
-      statusDiv.innerText = "Sedang menyimpan rekod...";
-
-      fetch(GOOGLE_SHEET_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nama: nama,
-          kelas: kelas,
-          skor: `${skor}/${total}`,
-          peratus: `${peratus}%`
-        })
-      })
-      .then(() => {
-        statusDiv.innerText = "✓ Rekod berjaya disimpan ke pangkalan data Google Sheets!";
-        statusDiv.style.color = "#10b981";
-      })
-      .catch(error => {
-        statusDiv.innerText = "Ralat semasa menyimpan rekod.";
-        statusDiv.style.color = "#ef4444";
-      });
-    }
-
-    function downloadCSV() {
-      const total = shuffledQuestions.length;
-      const percentage = Math.round((score / total) * 100);
-      const csvContent = "data:text/csv;charset=utf-8," 
-        + "Nama Murid,Kelas,Skor,Peratus,Tarikh\n"
-        + `"${studentName}","${studentClass}","${score}/${total}","${percentage}%","${new Date().toLocaleDateString()}"`;
-
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `Keputusan_${studentName}_${studentClass}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
     </script>
 </body>
 </html>
