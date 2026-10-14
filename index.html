@@ -724,29 +724,7 @@
                 showResults();
             }        
         }
-function simpanKeGoogleSheet(nama, kelas, skor, peratus) {
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBOYIblUGkPad-LPXWbWVpD71vI1luxbranAchzTcLHENxInx4hh95O43cfzVi2iXp/exec"; // <--- Tampal URL Web App di sini
-
-  fetch(SCRIPT_URL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      nama: nama,
-      kelas: kelas,
-      skor: skor + " / 10",
-      peratus: peratus + "%"
-    })
-  })
-  .then(() => {
-    console.log("Rekod berjaya dihantar ke Google Sheets!");
-  })
-  .catch(error => {
-    console.error("Ralat menghantar rekod:", error);
-  });
-}
+        
         // Render Final Results Screen
         function showResults() {
             document.getElementById('quizScreen').classList.add('hidden');
@@ -823,7 +801,31 @@ function simpanKeGoogleSheet(nama, kelas, skor, peratus) {
                 reviewContainer.appendChild(item);
             });
         }
+        
+function simpanKeGoogleSheet(nama, kelas, skor, peratus) {
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBOYIblUGkPad-LPXWbWVpD71vI1luxbranAchzTcLHENxInx4hh95O43cfzVi2iXp/exec"; // <--- Tampal URL Web App di sini
 
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      nama: nama,
+      kelas: kelas,
+      skor: skor + " / 10",
+      peratus: peratus + "%"
+    })
+  })
+  .then(() => {
+    console.log("Rekod berjaya dihantar ke Google Sheets!");
+  })
+  .catch(error => {
+    console.error("Ralat menghantar rekod:", error);
+  });
+}
+        
         // Restart Quiz Action
         function restartQuiz() {
             document.getElementById('resultScreen').classList.add('hidden');
